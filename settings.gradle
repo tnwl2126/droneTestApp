@@ -1,4 +1,4 @@
-//Library projects
+include ':sj_application'//Library projects
 include ':Mavlink'
 
 //Android library projects
