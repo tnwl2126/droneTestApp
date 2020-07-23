@@ -50,7 +50,7 @@ public class Battery implements DroneAttribute {
         return batteryCurrent;
     }
 
-    public Double getBatteryDischarge() {
+    public double getBatteryDischarge() {
         return batteryDischarge;
     }
 

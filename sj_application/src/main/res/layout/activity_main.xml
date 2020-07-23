@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:background="#87CEEB"
         android:text="BASIC"
-        android:textSize="9pt"
+        android:textSize="8pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/layoutBtn" />
 
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:background="#87CEEB"
         android:text="지적도off"
-        android:textSize="7pt"
+        android:textSize="6pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -79,8 +79,8 @@
         android:layout_height="wrap_content"
         android:text="ARM"
         android:visibility="invisible"
-        android:textSize="9pt"
         android:onClick="droneArmClick"
+        android:textSize="9pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/map" />
 
@@ -90,27 +90,37 @@
         android:layout_height="wrap_content"
         android:text="연결하기"
         android:onClick="droneConnectClick"
-        android:textSize="9pt"
+        android:textSize="7pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/armBtn" />
+
+    <Button
+        android:id="@+id/selectMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stabilize"
+        android:textSize="7pt"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/connectBtn" />
 
     <TableRow
         android:id="@+id/droneState"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#000000"
+        android:background="#70000000"
         app:layout_constraintStart_toStartOf="@+id/map"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/altitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15pt"
             android:text="고도 : "
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/altitudeValue"
@@ -118,26 +128,16 @@
             android:layout_height="wrap_content"
             android:text="0m"
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
-
-        <Spinner
-            android:id="@+id/selectMode"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_column="1"
-            android:layout_marginStart="15pt"
-            android:background="#FFFFFF"
-            android:spinnerMode="dropdown"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15pt"
+            android:layout_marginStart="10pt"
             android:text="속도 : "
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/speedValue"
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:text="0m/s"
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/distance"
@@ -154,7 +154,7 @@
             android:layout_marginStart="15pt"
             android:text="거리 : "
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/distanceValue"
@@ -162,7 +162,7 @@
             android:layout_height="wrap_content"
             android:text="0m"
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/attitude"
@@ -171,7 +171,7 @@
             android:layout_marginStart="15pt"
             android:text="YAW : "
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
         <TextView
             android:id="@+id/attitudeValue"
@@ -179,26 +179,41 @@
             android:layout_height="wrap_content"
             android:text="0deg"
             android:textColor="#FFFFFF"
-            android:textSize="8pt" />
+            android:textSize="6pt" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/gps"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="15pt"-->
-<!--            android:text="위성 : "-->
-<!--            android:textColor="#FFFFFF"-->
-<!--            android:textSize="8pt" />-->
+        <TextView
+            android:id="@+id/gps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15pt"
+            android:text="위성 : "
+            android:textColor="#FFFFFF"
+            android:textSize="6pt" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/gpsCount"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="0"-->
-<!--            android:textColor="#FFFFFF"-->
-<!--            android:textSize="8pt" />-->
+        <TextView
+            android:id="@+id/gpsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0개"
+            android:textColor="#FFFFFF"
+            android:textSize="6pt" />
 
+        <TextView
+            android:id="@+id/voltage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15pt"
+            android:text="전압 : "
+            android:textColor="#FFFFFF"
+            android:textSize="6pt" />
 
+        <TextView
+            android:id="@+id/voltageValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0V"
+            android:textColor="#FFFFFF"
+            android:textSize="6pt" />
     </TableRow>
 
 </android.support.constraint.ConstraintLayout>
