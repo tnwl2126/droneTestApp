@@ -2,6 +2,7 @@ package com.example.sj_application;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.PointF;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
+import com.naver.maps.map.overlay.OverlayImage;
 import com.o3dr.android.client.Drone;
 
 import com.o3dr.android.client.ControlTower;
@@ -330,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.myMap = naverMap;
         myMap.setMapType(NaverMap.MapType.Basic);
-
     }
 
     protected void connectBtn(Boolean isConnected){
@@ -344,7 +345,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void updateAltitude() {
         altitudeValue = (TextView) findViewById(R.id.altitudeValue);
         Altitude droneAltitude = this.drone.getAttribute(AttributeType.ALTITUDE);
+
+        Gps droneGps = this.drone.getAttribute(AttributeType.GPS);
         altitudeValue.setText(String.format("%3.1f", droneAltitude.getAltitude()) + "m");
+        LatLong vehiclePosition = droneGps.getPosition();
+
+
+        latLng = new LatLng(vehiclePosition.getLatitude(),vehiclePosition.getLongitude());
+        marker.setPosition(latLng);
+        marker.setIcon(OverlayImage.fromResource(R.drawable.gcstest2));
+        marker.setAnchor(new PointF((float)0.5,(float)0.77));
+        marker.setMap(myMap);
+        cameraUpdate = CameraUpdate.scrollTo(marker.getPosition());
+        myMap.moveCamera(cameraUpdate);
+        Toast.makeText(this.getApplicationContext(), "위도 : "+vehiclePosition.getLatitude()+"    경도 : "+vehiclePosition.getLongitude(), Toast.LENGTH_SHORT).show();
     }
 
     protected void updateSpeed() {
@@ -376,10 +390,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected  void updateAttitude(){
         attitudeValue = (TextView) findViewById(R.id.attitudeValue);
         Attitude droneAttitude = this.drone.getAttribute(AttributeType.ATTITUDE);
-        double droneYaw = droneAttitude.getYaw();
-        if(droneYaw < 0)  attitudeValue.setText(String.format("%3.1f", droneYaw+360) + "deg");
-        else  attitudeValue.setText(String.format("%3.1f", droneAttitude.getYaw()) + "deg");
 
+//        if(droneAttitude.getYaw() < 0)  attitudeValue.setText(String.format("%3.1f", (droneAttitude.getYaw()+360)) + "deg");
+//        else  attitudeValue.setText(String.format("%3.1f", droneAttitude.getYaw()) + "deg");
+        attitudeValue.setText(String.format("%3.1f", droneAttitude.getYaw()) + "deg");
+        marker.setAngle((float) droneAttitude.getYaw());
     }
 
     protected void updateGpsCount(){
@@ -447,24 +462,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // 비행모드 변경
     public void onFlightModeSelected(View view) {
-        VehicleMode vehicleMode = (VehicleMode) this.selectMode.getSelectedItem();
-
-        VehicleApi.getApi(this.drone).setVehicleMode(vehicleMode, new AbstractCommandListener() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(getApplicationContext(), "Vehicle mode change successful.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(int executionError) {
-                Toast.makeText(getApplicationContext(), "Vehicle mode  change failed: " + executionError, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onTimeout() {
-                Toast.makeText(getApplicationContext(), "Vehicle mode change timed out.", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        VehicleMode vehicleMode = (VehicleMode) this.selectMode.getSelectedItem();
+//
+//        VehicleApi.getApi(this.drone).setVehicleMode(vehicleMode, new AbstractCommandListener() {
+//            @Override
+//            public void onSuccess() {
+//                Toast.makeText(getApplicationContext(), "Vehicle mode change successful.", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onError(int executionError) {
+//                Toast.makeText(getApplicationContext(), "Vehicle mode  change failed: " + executionError, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onTimeout() {
+//                Toast.makeText(getApplicationContext(), "Vehicle mode change timed out.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
