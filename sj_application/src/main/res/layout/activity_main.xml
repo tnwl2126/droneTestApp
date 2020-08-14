@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <fragment
         android:id="@+id/map"
         android:name="com.naver.maps.map.MapFragment"
@@ -13,61 +14,91 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-31dp" />
+        tools:layout_editor_absoluteY="30dp" />
 
     <TableLayout
         android:id="@+id/buttonGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/visible"
-        app:layout_constraintEnd_toEndOf="@+id/visible">
+        app:layout_constraintEnd_toEndOf="@+id/visible"
+        android:background="#40000000">
 
         <Button
             android:id="@+id/basic"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="#FFFFFF"
+            android:background="#10000000"
             android:text="basic" />
 
         <Button
             android:id="@+id/hybrid"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="#FFFFFF"
+            android:background="#10000000"
             android:text="hybrid" />
 
         <Button
             android:id="@+id/navi"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="#FFFFFF"
+            android:background="#10000000"
             android:text="navi" />
 
         <Button
             android:id="@+id/terrain"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="#FFFFFF"
+            android:background="#10000000"
             android:text="terrain" />
 
         <Button
             android:id="@+id/satellite"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="#FFFFFF"
+            android:background="#10000000"
             android:text="satellite" />
     </TableLayout>
 
     <Button
         android:id="@+id/visible"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#87CEEB"
+        android:layout_height="25dp"
+        android:background="#7087CEEB"
         android:text="BASIC"
         android:textSize="8pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/layoutBtn" />
 
     <Button
-        android:id="@+id/layoutBtn"
+        android:id="@+id/mapLock"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:background="#7087CEEB"
+        android:text="맵잠금"
+        android:textSize="8pt"
+        android:onClick="mapLock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/visible" />
+    <Spinner
+        android:id="@+id/modeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#87CEEB"
+        android:visibility="invisible"
+        android:background="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@+id/map"
+        app:layout_constraintTop_toBottomOf="@+id/droneState" />
+
+    <Button
+        android:id="@+id/layoutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:background="#7087CEEB"
         android:text="지적도off"
         android:textSize="6pt"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,18 +107,20 @@
     <Button
         android:id="@+id/armBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:text="ARM"
         android:visibility="invisible"
         android:onClick="droneArmClick"
         android:textSize="9pt"
+        android:background="#7087CEEB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/map" />
 
     <Button
         android:id="@+id/connectBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
+        android:background="#7087CEEB"
         android:text="연결하기"
         android:onClick="droneConnectClick"
         android:textSize="7pt"
@@ -95,14 +128,41 @@
         app:layout_constraintStart_toEndOf="@+id/armBtn" />
 
     <Button
-        android:id="@+id/selectMode"
+        android:id="@+id/takeOffAltitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stabilize"
-        android:textSize="7pt"
+        android:background="#7087CEEB"
+        android:text="이륙고도\n3.0m"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
         app:layout_constraintStart_toEndOf="@+id/connectBtn" />
+
+    <TableLayout
+        android:id="@+id/altitudeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/takeOffAltitude"
+        app:layout_constraintEnd_toEndOf="@+id/takeOffAltitude">
+
+        <Button
+            android:id="@+id/altitudePlus"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:background="#7087CEEB"
+            android:onClick="altitudePlus"
+            android:text="+0.5m"
+            android:textSize="6pt" />
+
+        <Button
+            android:id="@+id/altitudeMinus"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:background="#7087CEEB"
+            android:onClick="altitudeMinus"
+            android:text="-0.5m"
+            android:textSize="6pt" />
+    </TableLayout>
 
     <TableRow
         android:id="@+id/droneState"
@@ -215,5 +275,7 @@
             android:textColor="#FFFFFF"
             android:textSize="6pt" />
     </TableRow>
+
+
 
 </android.support.constraint.ConstraintLayout>
