@@ -32,6 +32,7 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
 import com.naver.maps.map.overlay.OverlayImage;
+import com.naver.maps.map.overlay.PolylineOverlay;
 import com.o3dr.android.client.Drone;
 
 import com.o3dr.android.client.ControlTower;
@@ -60,6 +61,8 @@ import com.o3dr.services.android.lib.drone.attribute.AttributeEvent;
 import com.o3dr.services.android.lib.model.AbstractCommandListener;
 import com.o3dr.services.android.lib.model.SimpleCommandListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.view.View.INVISIBLE;
@@ -72,14 +75,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private TableLayout btn_group, btn_altitudeGroup;
     private TextView altitudeValue, speedValue, distanceValue, attitudeValue, gpsCount, voltageValue;
-    private Marker marker;
+    private Marker marker, longMarker;
     private CameraUpdate cameraUpdate;
     private Spinner modeSelect;
 
-//    private InfoWindow infoWindow;
+    private PolylineOverlay polyline;
+
+    private GuideMode guideMode;
 
     private UiSettings uiSettings;
     private LatLng latLng;
+    private LatLong guideLatLong;
     private Double altitude;
     private int num=0, mapLock=0;
     private int droneType = Type.TYPE_UNKNOWN;
@@ -123,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btn_altitudeGroup = (TableLayout) findViewById(R.id.altitudeGroup);
         btn_takeOffAltitude = (Button) findViewById(R.id.takeOffAltitude);
         modeSelect = (Spinner) findViewById(R.id.modeSpinner);
+        polyline = new PolylineOverlay();
 
         this.modeSelect.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
@@ -138,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         marker = new Marker();
+        guideMode = new GuideMode();
         altitude = 3.0;
         btn_group.setVisibility(INVISIBLE);
         this.listener();
@@ -145,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //버튼이벤트
     public void listener() {
+
         //일반지도
         btn_basic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -393,8 +402,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //지도
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        State vehicleState = this.drone.getAttribute(AttributeType.STATE);
         this.myMap = naverMap;
         myMap.setMapType(NaverMap.MapType.Basic);
+
+        if (vehicleState.isFlying()) {
+            myMap.setOnMapLongClickListener((coord, point) -> {
+                Toast.makeText(this, point.latitude + "," + point.longitude, Toast.LENGTH_SHORT).show();
+                guideLatLong = new LatLong(point.latitude, point.longitude);
+                guideMode.DialogSimple(drone, guideLatLong, this, myMap);
+            });
+        }
     }
 
     protected void connectBtn(Boolean isConnected){
@@ -434,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         distanceValue.setText(String.format("%3.1f", distanceFromHome) + "m");
-        Toast.makeText(this.getApplicationContext(), "위도 : "+vehiclePosition.getLatitude()+"    경도 : "+vehiclePosition.getLongitude(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), "distance 위도 : "+vehiclePosition.getLatitude()+"    경도 : "+vehiclePosition.getLongitude(), Toast.LENGTH_SHORT).show();
     }
 
     protected  void updateAttitude(){
@@ -459,13 +477,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         latLng = new LatLng(vehiclePosition.getLatitude(),vehiclePosition.getLongitude());
         marker.setPosition(latLng);
 
+        ArrayList<LatLng> droneMoveLine = new ArrayList<>();
+        Collections.addAll(droneMoveLine, new LatLng(vehiclePosition.getLatitude(),vehiclePosition.getLongitude()));
+        polyline.setCoords(droneMoveLine);
+        polyline.setWidth(5);
+
         marker.setIcon(OverlayImage.fromResource(R.drawable.gcstest2));
         marker.setAnchor(new PointF(0.5F,0.77F));
         marker.setMap(myMap);
 
         cameraUpdate = CameraUpdate.scrollTo(marker.getPosition());
         myMap.moveCamera(cameraUpdate);
-        Toast.makeText(this.getApplicationContext(), "위도 : "+vehiclePosition.getLatitude()+"    경도 : "+vehiclePosition.getLongitude(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), "gps 위도 : "+vehiclePosition.getLatitude()+"    경도 : "+vehiclePosition.getLongitude(), Toast.LENGTH_SHORT).show();
     }
 
     protected void updateVoltage(){
